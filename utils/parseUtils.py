@@ -1,4 +1,9 @@
-from G import DomainType
+import json
+
+import jsonpath
+import xmltodict
+
+from G import ContentType, EncodeType
 
 
 class Parser:
@@ -17,8 +22,14 @@ class Parser:
 
         :return: 对应格式的字符串
         """
+        if p_type == ContentType.XML:
+            return xmltodict.unparse(json.loads(p_contents, encoding=EncodeType.UTF8))
+        elif p_type == ContentType.JSON:
+            return json.dumps(p_contents, ensure_ascii=False)
+
         # TODO
-        return None
+        else:
+            return None
 
     @staticmethod
     def swagger_parse(url):
@@ -72,3 +83,14 @@ class Parser:
         :return: 解析结果
         """
         # TODO 借鉴jmeter
+
+    @staticmethod
+    def json_path_parse(json_str, xpath):
+        if type(json_str) == dict:
+            result = jsonpath.jsonpath(json_str, xpath)
+        else:
+            result = jsonpath.jsonpath(json.loads(json_str, encoding='UTF8'), xpath)
+        if not result:
+            return result[0]
+        else:
+            return None

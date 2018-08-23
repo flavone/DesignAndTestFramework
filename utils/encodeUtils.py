@@ -1,3 +1,8 @@
+import base64
+
+from G import EncodeType
+
+
 class Encoder:
     """
     编码类，只有静态方法
@@ -16,7 +21,10 @@ class Encoder:
 
         :return: 编码后的字符串
         """
-        # TODO
+        if encode_type == EncodeType.BASE64:
+            return base64.b64encode(original_str.encode('UTF8'))
+
+            # TODO
 
     @staticmethod
     def decode(original_str: str, decode_type, **kwargs):
@@ -31,4 +39,8 @@ class Encoder:
 
         :return: 解码后的字符串
         """
+        if decode_type == EncodeType.BASE64:
+            return base64.b64decode(original_str)
+
         # TODO
+

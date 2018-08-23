@@ -18,3 +18,9 @@ class DomainType:
     EQ = '='
     AND = '&&'
     OR = '||'
+
+
+class EncodeType:
+    BASE64 = 'Base64'
+    UTF8 = 'UTF8'
+    GBK = 'GBK'

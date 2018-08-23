@@ -25,6 +25,6 @@ my_json = {"data":
 
 print(json.dumps(my_json, ensure_ascii=False))
 
-print(type(my_json))
+print(isinstance(my_json, dict))
 
 # print(my_json.get("data")[1].get('type') == 1)
