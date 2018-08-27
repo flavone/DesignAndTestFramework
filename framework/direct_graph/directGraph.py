@@ -3,12 +3,12 @@ import networkx as nx
 from pylab import *
 
 
-# NO TODO
+# 获取权重，用于filter
 def get_weight(elem):
     return elem['weight']
 
 
-class UGraph:
+class DirectGraph:
     """
     根据有向联接实现流程图
     """
@@ -102,9 +102,9 @@ class UGraph:
         """
         获取有向图对应节点的全部可执行路径
 
-        :param start: 起始节点，可以为空
+        :param start: 起始节点，如果为空，则自动选取没有前节点的节点，可以是多个
 
-        :param stop: 结束节点，可以为空
+        :param stop: 结束节点，如果为空，则自动选取没有后节点的节点，可以是多个
 
         :param weight_limit: 权重，默认-1
 
@@ -124,16 +124,19 @@ class UGraph:
 
         if len(start_nodes) == 0 or len(stop_nodes) == 0:
             return []
+        # 遍历起始节点到结束节点的所有路径
         for start_node in start_nodes:
             for stop_node in stop_nodes:
                 tmp_dict.extend([path for path in self._get_paths(start_node, stop_node) if path is not None])
         tmp_dict.sort(key=get_weight, reverse=True)
         if len(tmp_dict) == 0:
             return []
+        # 权重设定
         if weight_limit < 0:
             weight_dict = tmp_dict
         else:
             weight_dict = [v for v in tmp_dict if v['weight'] >= weight_limit]
+        # 比例设定
         if percent >= 100:
             return weight_dict
         else:
