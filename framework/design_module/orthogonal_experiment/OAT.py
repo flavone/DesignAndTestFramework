@@ -43,6 +43,17 @@ def auto_fill(data):
     return new_data
 
 
+def json_to_order_dict(json_obj):
+    list = []
+    data = json_obj.get('data')
+    for k in data:
+        ll = []
+        for kk in data[k]:
+            ll.append(kk.get("case"))
+        list.append((k, ll))
+    return OrderedDict(list)
+
+
 class OAT(object):
     def __init__(self, OAFile=os.path.split(os.path.realpath(__file__))[0] + '/data/ts723_Designs.txt'):
         """
@@ -114,6 +125,8 @@ class OAT(object):
             0 宽松模式，只裁剪重复测试集
             1 严格模式，除裁剪重复测试集外，还裁剪含None测试集(num为允许None测试集最大数目)
         """
+        if isinstance(params, type({})):
+            params = json_to_order_dict(params)
         sets = []
         if fill == 1:
             params = auto_fill(params)

@@ -127,20 +127,21 @@ class DirectGraph:
         # 遍历起始节点到结束节点的所有路径
         for start_node in start_nodes:
             for stop_node in stop_nodes:
-                tmp_dict.extend([path for path in self._get_paths(start_node, stop_node) if path is not None])
+                tmp_dict.extend(
+                    [path for path in self._get_paths(start_node, stop_node) if path is not None]
+                )
         tmp_dict.sort(key=get_weight, reverse=True)
         if len(tmp_dict) == 0:
-            return []
+            return {"paths": []}
         # 权重设定
-        if weight_limit < 0:
+        if weight_limit <= 0 or weight_limit >= max([v['weight'] for v in tmp_dict]):
             weight_dict = tmp_dict
         else:
             weight_dict = [v for v in tmp_dict if v['weight'] >= weight_limit]
         # 比例设定
-        if percent >= 100:
-            return weight_dict
-        else:
-            return weight_dict[0:round(len(weight_dict) * percent / 100.00)]
+        if not (percent >= 100 or percent <= 0):
+            weight_dict = weight_dict[0:round(len(weight_dict) * percent / 100.00)]
+        return {"paths": weight_dict}
 
     def _get_paths(self, start, stop):
         tmp_dict = []
@@ -151,5 +152,5 @@ class DirectGraph:
             for j in range(len(i) - 1):
                 k = (i[j], i[j + 1])
                 weight += [float('%.2f' % d['weight']) for (u, v, d) in self._graph.edges(data=True) if (u, v) == k][0]
-                tmp_dict.append({'weight': weight, 'path': i})
+            tmp_dict.append({'weight': weight, 'path': i})
         return tmp_dict
